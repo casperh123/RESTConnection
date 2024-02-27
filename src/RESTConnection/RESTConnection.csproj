@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
 
         <PackageId>RESTConnection</PackageId>
-        <Version>1.0.0</Version>
+        <Version>1.0.1</Version>
         <Authors>Casper Holten</Authors>
         <Company>Clypper Technology</Company>
         <Product>RESTConnection</Product>

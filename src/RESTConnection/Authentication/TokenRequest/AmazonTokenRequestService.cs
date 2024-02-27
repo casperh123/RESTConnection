@@ -1,13 +1,22 @@
-﻿using System.Text.Json;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace RESTConnection.Authentication.TokenRequest
 {
-    public static class TokenRequests
+    public class AmazonTokenRequestService : ITokenRequestService
     {
-        public static async Task<string> GetAmazonAccessToken(string clientId, string clientSecret, string refreshToken)
-        {
-            HttpClient client = HttpClientSingleton.Instance; // Assuming HttpClientSingleton is correctly implemented
+        private readonly HttpClient _client;
 
+        public AmazonTokenRequestService(HttpClient client)
+        {
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+        }
+
+        public async Task<string> GetAccessToken(string clientId, string clientSecret, string refreshToken)
+        {
             Dictionary<string, string> requestHeaders = new Dictionary<string, string>
             {
                 ["grant_type"] = "refresh_token",
@@ -16,7 +25,7 @@ namespace RESTConnection.Authentication.TokenRequest
                 ["client_secret"] = clientSecret
             };
 
-            HttpResponseMessage response = await client.PostAsync(
+            HttpResponseMessage response = await _client.PostAsync(
                 "https://api.amazon.com/auth/o2/token",
                 new FormUrlEncodedContent(requestHeaders)
             );

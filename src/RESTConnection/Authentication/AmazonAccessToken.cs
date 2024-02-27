@@ -5,20 +5,21 @@ namespace RESTConnection.Authentication
 {
     public class AmazonAccessToken : IAuthentication, IDisposable
     {
-        private string _clientId;
-        private string _accessToken;
+        private readonly string _clientId;
         private readonly string _clientSecret;
         private readonly string _refreshToken;
+        private string _accessToken;
         private Timer _refreshTimer;
         private const int RefreshIntervalMinutes = 59;
+        private readonly ITokenRequestService _tokenRequestService;
 
-        public AmazonAccessToken(string clientId, string clientSecret, string refreshToken)
+        public AmazonAccessToken(string clientId, string clientSecret, string refreshToken, ITokenRequestService tokenRequestService)
         {
-            _clientId = clientId;
-            _clientSecret = clientSecret;
-            _refreshToken = refreshToken;
+            _clientId = clientId ?? throw new ArgumentNullException(nameof(clientId));
+            _clientSecret = clientSecret ?? throw new ArgumentNullException(nameof(clientSecret));
+            _refreshToken = refreshToken ?? throw new ArgumentNullException(nameof(refreshToken));
+            _tokenRequestService = tokenRequestService ?? throw new ArgumentNullException(nameof(tokenRequestService));
 
-            // Call RefreshAccessToken immediately and set the timer for subsequent refreshes
             RefreshAccessToken().Wait();
             InitializeTimer();
         }
@@ -42,7 +43,7 @@ namespace RESTConnection.Authentication
         
         private async Task RefreshAccessToken()
         {
-            _accessToken = await TokenRequests.GetAmazonAccessToken(_clientId, _clientSecret, _refreshToken);
+            _accessToken = await _tokenRequestService.GetAccessToken(_clientId, _clientSecret, _refreshToken);
         }
 
         public void Dispose()
