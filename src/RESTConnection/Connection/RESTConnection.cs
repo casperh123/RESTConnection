@@ -1,6 +1,6 @@
-﻿using DataDownloader.Connection.RESTConnection.RequestBuilder;
+﻿using RESTConnection.Connection.RequestBuilder;
 
-namespace DataDownloader.Connection.RESTConnection
+namespace RESTConnection.Connection
 {
     public class RESTConnection(IRequestBuilder requestBuilder, HttpClient httpClient) : IRESTConnection
     {

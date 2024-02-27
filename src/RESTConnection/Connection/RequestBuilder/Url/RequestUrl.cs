@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace DataDownloader.Connection.RESTConnection.RequestBuilder.Url;
+namespace RESTConnection.Connection.RequestBuilder.Url;
 
 public class RequestUrl
 {
@@ -28,7 +28,7 @@ public class RequestUrl
         
         List<string> queries = new();
 
-        IEnumerable<IGrouping<string, Parameter>> groupedParameters = parameters.GroupBy(p => p.ParameterName);
+        IEnumerable<IGrouping<string, Parameter>> groupedParameters = parameters.GroupBy(p => p.Key);
 
         foreach (IGrouping<string, Parameter> group in groupedParameters)
         {

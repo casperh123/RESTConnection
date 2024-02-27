@@ -1,4 +1,4 @@
-﻿namespace DataDownloader.Connection.HttpClientSingleton;
+﻿namespace RESTConnection;
 
 public static class HttpClientSingleton
 {

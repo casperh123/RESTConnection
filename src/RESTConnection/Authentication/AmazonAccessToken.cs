@@ -1,11 +1,11 @@
-﻿using DataDownloader.Connection.RESTConnection;
+﻿using RESTConnection.Authentication.TokenRequest;
+using RESTConnection.Connection;
 
-namespace DataDownloader.Connection.Authentication
+namespace RESTConnection.Authentication
 {
     public class AmazonAccessToken : IAuthentication, IDisposable
     {
-        public string ClientId { get; }
-        public string? Scope { get; set; }
+        private string _clientId;
         private string _accessToken;
         private readonly string _clientSecret;
         private readonly string _refreshToken;
@@ -14,7 +14,7 @@ namespace DataDownloader.Connection.Authentication
 
         public AmazonAccessToken(string clientId, string clientSecret, string refreshToken)
         {
-            ClientId = clientId;
+            _clientId = clientId;
             _clientSecret = clientSecret;
             _refreshToken = refreshToken;
 
@@ -31,15 +31,18 @@ namespace DataDownloader.Connection.Authentication
                 TimeSpan.FromMilliseconds(interval), 
                 TimeSpan.FromMilliseconds(interval));
         }
-
-        public string HeaderFormat()
+        
+        public Dictionary<string, string> AuthenticationHeaders()
         {
-            return _accessToken;
+            return new Dictionary<string, string>()
+            {
+                { "x-amz-access-token", $"{_accessToken}" }
+            };
         }
-
+        
         private async Task RefreshAccessToken()
         {
-            _accessToken = await TokenRequests.GetAmazonAccessGetAccessToken(ClientId, _clientSecret, _refreshToken);
+            _accessToken = await TokenRequests.GetAmazonAccessToken(_clientId, _clientSecret, _refreshToken);
         }
 
         public void Dispose()

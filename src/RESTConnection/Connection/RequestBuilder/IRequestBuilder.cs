@@ -1,4 +1,4 @@
-﻿namespace DataDownloader.Connection.RESTConnection.RequestBuilder;
+﻿namespace RESTConnection.Connection.RequestBuilder;
 
 public interface IRequestBuilder
 {

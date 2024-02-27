@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <PackageId>RESTConnection</PackageId>
+        <Version>1.0.0</Version>
+        <Authors>Casper Holten</Authors>
+        <Company>Clypper Technology</Company>
+        <Product>RESTConnection</Product>
+        <Description>A package that interfaces with JSON REST API's</Description>
+        <PackageTags>JSON,REST,API</PackageTags>
+        <RepositoryUrl>https://github.com/casperh123/RESTConnection</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+        <DevelopmentDependency>false</DevelopmentDependency>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+</Project>

@@ -1,4 +1,4 @@
-﻿namespace DataDownloader.Connection.RESTConnection;
+﻿namespace RESTConnection.Connection;
 
 public interface IRESTConnection
 {

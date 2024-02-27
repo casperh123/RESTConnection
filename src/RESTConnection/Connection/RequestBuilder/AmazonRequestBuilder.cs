@@ -1,13 +1,10 @@
-﻿using System.Text;
-using DataDownloader.Connection.Authentication;
-using DataDownloader.Connection.RESTConnection.RequestBuilder.Url;
-using Newtonsoft.Json;
+﻿using RESTConnection.Authentication;
+using RESTConnection.Connection.RequestBuilder.Url;
 
-namespace DataDownloader.Connection.RESTConnection.RequestBuilder
+namespace RESTConnection.Connection.RequestBuilder
 {
     public class AmazonRequestBuilder : AbstractRequestBuilder
     {
-        private readonly IAuthentication _authentication;
         private readonly Region _region;
         private static readonly string DateFormat = "yyyyMMddTHHmmssZ";
         private static readonly string UserAgent = "Data Retrieval/1.0 (Language=C#)";
@@ -19,15 +16,13 @@ namespace DataDownloader.Connection.RESTConnection.RequestBuilder
             { Region.Sandbox, "sandbox.sellingpartnerapi-eu.amazon.com" }
         };
 
-        public AmazonRequestBuilder(IAuthentication authentication, Region region) : base(new RequestUrl(RegionHostMapping[region]))
+        public AmazonRequestBuilder(IAuthentication authentication, Region region) : base(new RequestUrl(RegionHostMapping[region]), authentication)
         {
-            _authentication = authentication ?? throw new ArgumentNullException(nameof(authentication));
             _region = region;
         }
 
         protected override void AddRequiredHeaders(HttpRequestMessage request)
         {
-            request.Headers.Add("x-amz-access-token", _authentication.HeaderFormat());
             request.Headers.Add("x-amz-date", DateTime.UtcNow.ToString(DateFormat));
             request.Headers.Add("host", RegionHostMapping[_region]);
             request.Headers.UserAgent.ParseAdd(UserAgent);
