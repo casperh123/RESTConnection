@@ -6,11 +6,11 @@
         <Nullable>enable</Nullable>
 
         <PackageId>RESTConnection</PackageId>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <Authors>Casper Holten</Authors>
         <Company>Clypper Technology</Company>
         <Product>RESTConnection</Product>
-        <Description>A package that interfaces with JSON REST API's</Description>
+        <Description>RESTConnectionToolkit simplifies .NET development for Amazon Selling Partner and e-conomic REST APIs. Featuring request builders for seamless API interaction, region-aware configurations, and robust authentication mechanisms, it's designed for developers seeking efficient API integration. Extendable for custom needs, it's ideal for projects requiring dependable, straightforward access to key REST APIs.</Description>
         <PackageTags>JSON,REST,API</PackageTags>
         <RepositoryUrl>https://github.com/casperh123/RESTConnection</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

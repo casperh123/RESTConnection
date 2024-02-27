@@ -8,7 +8,7 @@ using Xunit;
 
 namespace RESTConnectionTests.Authentication
 {
-    public class AmazonAccessTokenTests
+    public class AmazonAuthenticationTests
     {
         [Fact]
         public void Constructor_InitializesPropertiesCorrectly()
@@ -24,10 +24,10 @@ namespace RESTConnectionTests.Authentication
                 .ReturnsAsync("dummy-token");
 
             // Act
-            AmazonAccessToken amazonAccessToken = new AmazonAccessToken(clientId, clientSecret, refreshToken, mockTokenRequestService.Object);
+            AmazonAuthentication amazonAuthentication = new AmazonAuthentication(clientId, clientSecret, refreshToken, mockTokenRequestService.Object);
 
             // Assert
-            Dictionary<string, string> headers = amazonAccessToken.AuthenticationHeaders();
+            Dictionary<string, string> headers = amazonAuthentication.AuthenticationHeaders();
             Assert.True(headers.ContainsKey("x-amz-access-token"));
             Assert.Equal("dummy-token", headers["x-amz-access-token"]);
         }
@@ -37,10 +37,10 @@ namespace RESTConnectionTests.Authentication
         {
             // Arrange
             Mock<ITokenRequestService> mockTokenRequestService = new Mock<ITokenRequestService>();
-            AmazonAccessToken amazonAccessToken = new AmazonAccessToken("client-id", "client-secret", "refresh-token", mockTokenRequestService.Object);
+            AmazonAuthentication amazonAuthentication = new AmazonAuthentication("client-id", "client-secret", "refresh-token", mockTokenRequestService.Object);
 
             // Act
-            Exception recordedException = Record.Exception(() => amazonAccessToken.Dispose());
+            Exception recordedException = Record.Exception(() => amazonAuthentication.Dispose());
 
             // Assert
             Assert.Null(recordedException); // No exception should be thrown
