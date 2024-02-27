@@ -2,7 +2,7 @@
 
 namespace RESTConnection.Connection
 {
-    public class ApiRequest(IRequestBuilder requestBuilder, HttpClient httpClient) : IRESTConnection
+    public class APIConnection(IRequestBuilder requestBuilder, HttpClient httpClient) : IRESTConnection
     {
         private readonly HttpClient _client = httpClient;
         private readonly IRequestBuilder _requestBuilder = requestBuilder ?? throw new ArgumentNullException(nameof(requestBuilder));

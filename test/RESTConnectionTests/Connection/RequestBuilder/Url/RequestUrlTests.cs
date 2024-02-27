@@ -38,14 +38,17 @@ namespace RESTConnectionTests.Connection.RequestBuilder.Url
         }
 
         [Fact]
-        public void GetRequestUrl_GroupsParametersWithSameKey()
+        public void GetRequestUrl_GroupsParametersWithSameKey_AndCommaSeparatesValues()
         {
             RequestUrl requestUrl = new RequestUrl("www.example.com");
+    
             string result = requestUrl.GetRequestUrl("test", new Parameter("key", "value1"), new Parameter("key", "value2"));
-
-            Assert.Contains("?key=value1%2Cvalue2", result);
+    
+            Assert.Contains("?key=value1,value2", result);
+            
+            Assert.Equal("https://www.example.com/test?key=value1,value2", result);
         }
-
+        
         [Fact]
         public void GetRequestUrl_EncodesParametersInQueryString()
         {

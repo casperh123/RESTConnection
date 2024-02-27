@@ -6,7 +6,6 @@ public class RequestUrl
 {
     private readonly string _url;
     
-    
     public RequestUrl(string url)
     {
         _url = url ?? throw new ArgumentNullException(nameof(url));
