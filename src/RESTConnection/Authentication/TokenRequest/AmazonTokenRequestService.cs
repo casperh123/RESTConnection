@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 
 namespace RESTConnection.Authentication.TokenRequest
@@ -31,8 +32,13 @@ namespace RESTConnection.Authentication.TokenRequest
             );
 
             response.EnsureSuccessStatusCode();
+            
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                TypeInfoResolver = new DefaultJsonTypeInfoResolver()
+            };
 
-            JsonElement json = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync());
+            JsonElement json = await JsonSerializer.DeserializeAsync<JsonElement>(await response.Content.ReadAsStreamAsync(), options);
 
             if (json.TryGetProperty("access_token", out JsonElement accessTokenElement))
             {

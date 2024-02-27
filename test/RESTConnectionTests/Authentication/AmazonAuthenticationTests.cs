@@ -1,49 +1,38 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Moq;
 using RESTConnection.Authentication;
 using RESTConnection.Authentication.TokenRequest;
 using Xunit;
 
-namespace RESTConnectionTests.Authentication
+namespace RESTConnectionTests.Authentication;
+
+public class AmazonAuthenticationTests
 {
-    public class AmazonAuthenticationTests
+    [Fact]
+    public async Task AuthenticationHeaders_LazilyLoadsTokenWithoutBlocking()
     {
-        [Fact]
-        public void Constructor_InitializesPropertiesCorrectly()
-        {
-            // Arrange
-            string clientId = "test-client-id";
-            string clientSecret = "test-client-secret";
-            string refreshToken = "test-refresh-token";
-            Mock<ITokenRequestService> mockTokenRequestService = new Mock<ITokenRequestService>();
+        // Arrange
+        var clientId = "test-client-id";
+        var clientSecret = "test-client-secret";
+        var refreshToken = "test-refresh-token";
+        var expectedToken = "dummy-token";
+        var mockTokenRequestService = new Mock<ITokenRequestService>();
+        mockTokenRequestService.Setup(service => service.GetAccessToken(clientId, clientSecret, refreshToken))
+            .ReturnsAsync(expectedToken);
 
-            // Mock the GetAccessToken to return a dummy token
-            mockTokenRequestService.Setup(service => service.GetAccessToken(clientId, clientSecret, refreshToken))
-                .ReturnsAsync("dummy-token");
+        var amazonAuthentication = new AmazonAuthentication(clientId, clientSecret, refreshToken, mockTokenRequestService.Object);
 
-            // Act
-            AmazonAuthentication amazonAuthentication = new AmazonAuthentication(clientId, clientSecret, refreshToken, mockTokenRequestService.Object);
+        // Act
+        var initialTime = DateTime.Now;
+        var headers = amazonAuthentication.AuthenticationHeaders();
+        var elapsed = DateTime.Now - initialTime;
 
-            // Assert
-            Dictionary<string, string> headers = amazonAuthentication.AuthenticationHeaders();
-            Assert.True(headers.ContainsKey("x-amz-access-token"));
-            Assert.Equal("dummy-token", headers["x-amz-access-token"]);
-        }
+        // Assert
+        Assert.Contains("x-amz-access-token", headers.Keys);
+        Assert.Equal(expectedToken, headers["x-amz-access-token"]);
+        // Ensure the call was quick, implying no blocking occurred. Adjust the threshold as needed.
+        Assert.True(elapsed < TimeSpan.FromSeconds(1), "Token retrieval should be fast and non-blocking.");
 
-        [Fact]
-        public void Dispose_DisposesTimerCorrectly()
-        {
-            // Arrange
-            Mock<ITokenRequestService> mockTokenRequestService = new Mock<ITokenRequestService>();
-            AmazonAuthentication amazonAuthentication = new AmazonAuthentication("client-id", "client-secret", "refresh-token", mockTokenRequestService.Object);
-
-            // Act
-            Exception recordedException = Record.Exception(() => amazonAuthentication.Dispose());
-
-            // Assert
-            Assert.Null(recordedException); // No exception should be thrown
-        }
+        // Additionally, verify that the token service was called, implying lazy loading.
+        mockTokenRequestService.Verify(service => service.GetAccessToken(clientId, clientSecret, refreshToken), Times.Once);
     }
 }

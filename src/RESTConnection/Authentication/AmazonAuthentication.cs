@@ -20,7 +20,6 @@ namespace RESTConnection.Authentication
             _refreshToken = refreshToken ?? throw new ArgumentNullException(nameof(refreshToken));
             _tokenRequestService = tokenRequestService ?? throw new ArgumentNullException(nameof(tokenRequestService));
 
-            RefreshAccessToken();
             InitializeTimer();
         }
 
@@ -37,7 +36,7 @@ namespace RESTConnection.Authentication
         {
             if (_accessToken == null)
             {
-                RefreshAccessToken().Wait();
+                Task.Run(() => RefreshAccessToken()).Wait();
             }
             
             return new Dictionary<string, string>()
