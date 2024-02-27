@@ -20,7 +20,7 @@ namespace RESTConnection.Authentication
             _refreshToken = refreshToken ?? throw new ArgumentNullException(nameof(refreshToken));
             _tokenRequestService = tokenRequestService ?? throw new ArgumentNullException(nameof(tokenRequestService));
 
-            RefreshAccessToken().Wait();
+            RefreshAccessToken();
             InitializeTimer();
         }
 
@@ -35,6 +35,11 @@ namespace RESTConnection.Authentication
         
         public Dictionary<string, string> AuthenticationHeaders()
         {
+            if (_accessToken == null)
+            {
+                RefreshAccessToken().Wait();
+            }
+            
             return new Dictionary<string, string>()
             {
                 { "x-amz-access-token", $"{_accessToken}" }
