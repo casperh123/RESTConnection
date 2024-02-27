@@ -23,6 +23,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./src/RESTConnection
     - name: Build
-      run: dotnet build ./src/RESTConnection --no-restore
+      run: dotnet build ./src/RESTConnection
     - name: Test
-      run: dotnet test ./test/RESTConnectionTests --no-build --verbosity normal
+      run: dotnet test ./test/RESTConnectionTests --verbosity normal
